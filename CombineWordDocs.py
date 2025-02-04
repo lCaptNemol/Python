@@ -3,7 +3,10 @@ import glob
 from docx import Document
 from docxcompose.composer import Composer
 
-def combine_word_documents(input_folder, output_file):
+def combine_word_documents(input_folder, output_folder, output_filename="combined_document.docx"):
+    # Ensure output directory exists
+    os.makedirs(output_folder, exist_ok=True)
+    
     # Get all .docx files while ignoring temp files (~$ files)
     word_files = [
         f for f in glob.glob(os.path.join(input_folder, "*.docx"))
@@ -32,15 +35,15 @@ def combine_word_documents(input_folder, output_file):
         # Append document after page break
         composer.append(doc)
     
+    # Define output file path
+    output_file_path = os.path.join(output_folder, output_filename)
+    
     # Save the final combined document
-    composer.save(output_file)
-    print(f"Merged document saved as: {output_file}")
+    composer.save(output_file_path)
+    print(f"Merged document saved as: {output_file_path}")
     print(f"Total number of Word documents combined: {len(word_files)}")
 
 if __name__ == "__main__":
     input_folder = "/Users/km/Documents/Importation"
-    output_file = os.path.join(input_folder, "combined_document.docx")
-    combine_word_documents(input_folder, output_file)
-    
-    #Test Commit
-    
+    output_folder = "/Users/km/Documents/Convert"
+    combine_word_documents(input_folder, output_folder)
