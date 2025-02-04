@@ -35,3 +35,6 @@ if __name__ == "__main__":
     input_folder = "/Users/km/Documents/Importation"
     output_file = os.path.join(input_folder, "combined_document.docx")
     combine_word_documents(input_folder, output_file)
+    
+    #Test Commit
+    
