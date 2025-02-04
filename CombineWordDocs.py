@@ -25,6 +25,11 @@ def combine_word_documents(input_folder, output_file):
     for file in word_files[1:]:
         print(f"Adding: {file}")  # Debugging line to see which files are processed
         doc = Document(file)
+        
+        # Insert a page break before adding the next document
+        master_doc.add_page_break()
+        
+        # Append document after page break
         composer.append(doc)
     
     # Save the final combined document
