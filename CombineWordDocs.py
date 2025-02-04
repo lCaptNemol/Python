@@ -30,6 +30,7 @@ def combine_word_documents(input_folder, output_file):
     # Save the final combined document
     composer.save(output_file)
     print(f"Merged document saved as: {output_file}")
+    print(f"Total number of Word documents combined: {len(word_files)}")
 
 if __name__ == "__main__":
     input_folder = "/Users/km/Documents/Importation"
