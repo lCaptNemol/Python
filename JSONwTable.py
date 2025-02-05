@@ -1,6 +1,7 @@
 import docx
 import json
 import os
+import re
 
 def extract_table(table):
     """Converts a Word table into a list of dictionaries (rows)."""
@@ -17,45 +18,67 @@ def extract_table(table):
 
     return table_data
 
+def is_list_item(text):
+    """Checks if a paragraph is part of a list (manual or Word-style)."""
+    return bool(re.match(r"^(-|\*|•|\d+\.|[a-z]\.)\s+", text))  # Detects "- ", "* ", "• ", "1. ", "a. "
+
+def clean_list_item(text):
+    """Removes list markers like '- ', '• ', '1. ', etc."""
+    return re.sub(r"^(-|\*|•|\d+\.|[a-z]\.)\s+", "", text).strip()
+
 def docx_to_json(docx_path, output_path):
-    """Converts a Word document (headings, paragraphs, and tables) to JSON."""
+    """Converts a Word document (headings, paragraphs, lists, and tables) to JSON."""
     document_data = []
+    current_section = None
+    current_subsection = None
+    current_subsubsection = None
+    current_list = None  # Track list items
 
     try:
         doc = docx.Document(docx_path)
 
-        current_section = None
-        current_subsection = None
-        current_subsubsection = None
-
         for paragraph in doc.paragraphs:
-            style_name = paragraph.style.name
             text = paragraph.text.strip()
+            style_name = paragraph.style.name if paragraph.style else ""
 
             if not text:
                 continue
 
+            # Handle headings
             if style_name.startswith("Heading 1"):
                 current_section = {"title": text, "content": []}
                 document_data.append(current_section)
                 current_subsection = None
                 current_subsubsection = None
+                current_list = None  # Reset list tracking
             elif style_name.startswith("Heading 2"):
-                if current_section is None:
-                    current_section = {"title": "Untitled Section", "content": []}
-                    document_data.append(current_section)
-
                 current_subsection = {"title": text, "content": []}
-                current_section["content"].append(current_subsection)
-                current_subsubsection = None
-            elif style_name.startswith("Heading 3"):
-                if current_subsection is None:
-                    current_subsection = {"title": "Untitled Subsection", "content": []}
+                if current_section:
                     current_section["content"].append(current_subsection)
-
+                current_subsubsection = None
+                current_list = None
+            elif style_name.startswith("Heading 3"):
                 current_subsubsection = {"title": text, "content": []}
-                current_subsection["content"].append(current_subsubsection)
-            else:  # Normal or Body Text
+                if current_subsection:
+                    current_subsection["content"].append(current_subsubsection)
+                current_list = None
+            # Handle lists
+            elif is_list_item(text):
+                if current_list is None:
+                    current_list = {"type": "list", "items": []}
+                    if current_subsubsection:
+                        current_subsubsection["content"].append(current_list)
+                    elif current_subsection:
+                        current_subsection["content"].append(current_list)
+                    elif current_section:
+                        current_section["content"].append(current_list)
+
+                list_item_text = clean_list_item(text)  # Remove bullet points
+                current_list["items"].append({"text": list_item_text})
+            else:  # Normal paragraph
+                if current_list:
+                    current_list = None  # End list tracking
+
                 content_item = {"type": "paragraph", "text": text}
 
                 if current_subsubsection:
