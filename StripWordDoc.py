@@ -46,6 +46,6 @@ def remove_text_and_tables(input_directory, output_directory):
             print(f"❌ Error processing {filename}: {e}")
 
 # Example usage
-input_directory = "/Users/km/Documents/Convert"
-output_directory = "/Users/km/Documents/JSON"
+input_directory = "/Users/km/Documents/Combine_Word_Docs/Convert"
+output_directory = "/Users/km/Documents/Combine_Word_Docs/Clean"
 remove_text_and_tables(input_directory, output_directory)

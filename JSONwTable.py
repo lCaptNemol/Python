@@ -138,7 +138,7 @@ def process_directory(input_dir, output_dir):
             docx_to_json(input_path, output_path)
 
 # ==== SET YOUR INPUT AND OUTPUT DIRECTORY HERE ====
-input_directory = "/Users/km/Documents/Convert"  # Change this to your input folder
-output_directory = "/Users/km/Documents/JSON"    # Change this to your output folder
+input_directory = "/Users/km/Documents/Combine_Word_Docs/Convert"  # Change this to your input folder
+output_directory = "/Users/km/Documents/Combine_Word_Docs/JSON"    # Change this to your output folder
 
 process_directory(input_directory, output_directory)

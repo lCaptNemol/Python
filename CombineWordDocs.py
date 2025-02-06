@@ -44,6 +44,6 @@ def combine_word_documents(input_folder, output_folder, output_filename="combine
     print(f"Total number of Word documents combined: {len(word_files)}")
 
 if __name__ == "__main__":
-    input_folder = "/Users/km/Documents/Importation"
-    output_folder = "/Users/km/Documents/Convert"
+    input_folder = "/Users/km/Documents/Combine_Word_Docs/Importation"
+    output_folder = "/Users/km/Documents/Combine_Word_Docs/Convert"
     combine_word_documents(input_folder, output_folder)
