@@ -4,6 +4,33 @@ import re
 from docx import Document
 from docxcompose.composer import Composer
 
+BASE_DIR = "/Users/km/Documents/Combine_Word_Docs/"
+
+def list_folders(base_path):
+    """Returns a list of subdirectories inside the base path."""
+    return [f for f in os.listdir(base_path) if os.path.isdir(os.path.join(base_path, f))]
+
+def get_user_selected_folder(base_path):
+    """Prompts the user to select a folder from the available options."""
+    folders = list_folders(base_path)
+    if not folders:
+        print("No subdirectories found in the base directory.")
+        return None
+    
+    print("\nAvailable folders:")
+    for i, folder in enumerate(folders, 1):
+        print(f"{i}. {folder}")
+
+    while True:
+        try:
+            choice = int(input("\nEnter the number of the folder to use: "))
+            if 1 <= choice <= len(folders):
+                return folders[choice - 1]
+            else:
+                print("Invalid selection. Please choose a valid folder number.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
 def get_common_prefix(filenames):
     """Extracts the prefix before the first '.' from all filenames and ensures they are the same."""
     prefixes = {re.split(r"\.", os.path.basename(f), 1)[0] for f in filenames}
@@ -56,6 +83,11 @@ def combine_word_documents(input_folder, output_folder):
     print(f"Total number of Word documents combined: {len(word_files)}")
 
 if __name__ == "__main__":
-    input_folder = "/Users/km/Documents/Combine_Word_Docs/PortHealth"
-    output_folder = "/Users/km/Documents/Combine_Word_Docs/Convert"
-    combine_word_documents(input_folder, output_folder)
+    selected_folder = get_user_selected_folder(BASE_DIR)
+    
+    if selected_folder:
+        input_folder = os.path.join(BASE_DIR, selected_folder)
+        output_folder = os.path.join(BASE_DIR, "Convert")  # Keep the output in 'Convert' folder
+        combine_word_documents(input_folder, output_folder)
+    else:
+        print("No folder selected. Exiting program.")
