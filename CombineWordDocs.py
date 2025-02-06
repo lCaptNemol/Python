@@ -1,9 +1,18 @@
 import os
 import glob
+import re
 from docx import Document
 from docxcompose.composer import Composer
 
-def combine_word_documents(input_folder, output_folder, output_filename="combined_document.docx"):
+def get_common_prefix(filenames):
+    """Extracts the prefix before the first '.' from all filenames and ensures they are the same."""
+    prefixes = {re.split(r"\.", os.path.basename(f), 1)[0] for f in filenames}
+    
+    if len(prefixes) == 1:
+        return prefixes.pop()
+    return "combined_document"  # Default if no common prefix is found
+
+def combine_word_documents(input_folder, output_folder):
     # Ensure output directory exists
     os.makedirs(output_folder, exist_ok=True)
     
@@ -20,6 +29,9 @@ def combine_word_documents(input_folder, output_folder, output_filename="combine
     # Sort files to maintain order
     word_files.sort()
     
+    # Determine output filename dynamically
+    output_filename = get_common_prefix(word_files) + ".docx"
+
     # Open the first document as the base
     master_doc = Document(word_files[0])
     composer = Composer(master_doc)
@@ -44,6 +56,6 @@ def combine_word_documents(input_folder, output_folder, output_filename="combine
     print(f"Total number of Word documents combined: {len(word_files)}")
 
 if __name__ == "__main__":
-    input_folder = "/Users/km/Documents/Combine_Word_Docs/Importation"
+    input_folder = "/Users/km/Documents/Combine_Word_Docs/PortHealth"
     output_folder = "/Users/km/Documents/Combine_Word_Docs/Convert"
     combine_word_documents(input_folder, output_folder)
