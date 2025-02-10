@@ -4,7 +4,7 @@ import re
 from docx import Document
 from docxcompose.composer import Composer
 
-BASE_DIR = "/Users/km/Documents/Combine_Word_Docs/"
+BASE_DIR = "/Users/km/Documents/Projects/Combine_Word_Docs"
 
 def list_folders(base_path):
     """Returns a list of subdirectories inside the base path."""
