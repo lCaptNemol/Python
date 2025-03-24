@@ -7,3 +7,10 @@ and so a count would help atleast show how many docs were combined.
 I am learning Python and this seemed like a good useful project to get me started on my Journey
 
 Also, with this file, I am learning how to track changes with Git and learning how to upload to GitHub
+
+
+For these scripts you need to install the dependencies below. Run these in VS code Terminal
+
+pip install python-docx pdf2docx lxml
+pip install python-docx docxcompose
+
